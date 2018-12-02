@@ -16,6 +16,10 @@ namespace MyEvernote.DataAccessLayer
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Liked> Likes { get; set; }
 
-        
+        public DatabaseContex()
+        {
+            Database.SetInitializer(new MyInitializer());
+        }
+
     }
 }

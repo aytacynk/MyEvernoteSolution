@@ -11,7 +11,8 @@ namespace MyEvernote.BusinessLayer
         public Test()
         {
             DataAccessLayer.DatabaseContex db = new DataAccessLayer.DatabaseContex();
-            db.Database.CreateIfNotExists();
+            //db.Database.CreateIfNotExists();
+            db.EvernoteUsers.ToList();
         }
     }
 }

@@ -21,12 +21,17 @@ namespace MyEvernote.Entities
 
         public int LikeCount { get; set; }
 
-        public int CategoryId { get; set; }
+        //public int CategoryId { get; set; }
 
         public virtual EvernoteUser Owner { get; set; }
         public virtual Catergory Catergory { get; set; }
         public virtual List<Comment> Comments { get; set; }
         public virtual List<Liked> Likes { get; set; }
 
+        public Note()
+        {
+            Comments = new List<Comment>();
+            Likes = new List<Liked>();
+        }
     }
 }

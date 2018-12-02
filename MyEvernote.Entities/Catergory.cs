@@ -18,5 +18,10 @@ namespace MyEvernote.Entities
         public string Description { get; set; }
 
         public virtual List<Note> Notes { get; set; }
+
+        public Catergory()
+        {
+            Notes = new List<Note>();
+        }
     }
 }

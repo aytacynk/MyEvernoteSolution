@@ -16,5 +16,7 @@ namespace MyEvernote.Entities
 
         public virtual Note Note { get; set; }
         public virtual EvernoteUser LikedUser { get; set; }
+
+
     }
 }
