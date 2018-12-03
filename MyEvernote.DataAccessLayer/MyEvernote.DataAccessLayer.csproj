@@ -51,8 +51,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DatabaseContex.cs" />
-    <Compile Include="MyInitializer.cs" />
+    <Compile Include="Abstract\IRepository.cs" />
+    <Compile Include="EntityFrameworkMSsqlDB\DatabaseContex.cs" />
+    <Compile Include="EntityFrameworkMSsqlDB\Repository.cs" />
+    <Compile Include="EntityFrameworkMSsqlDB\RepositoryBase.cs" />
+    <Compile Include="EntityFrameworkMSsqlDB\MyInitializer.cs" />
+    <Compile Include="MySqlDB\Repository.cs" />
+    <Compile Include="MySqlDB\RepositoryBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

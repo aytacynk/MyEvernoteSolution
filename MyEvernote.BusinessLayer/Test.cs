@@ -1,4 +1,5 @@
-﻿using MyEvernote.Entities;
+﻿using MyEvernote.DataAccessLayer.EntityFrameworkMSsqlDB;
+using MyEvernote.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,7 +58,6 @@ namespace MyEvernote.BusinessLayer
                 int result = repo_user.Delete(user);
             }
         }
-
 
         public void CommentTest()
         {
