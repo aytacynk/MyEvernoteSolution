@@ -1,4 +1,6 @@
-﻿
+﻿@using MyEvernote.Entities
+@model List<Note>
+
 @{
     ViewBag.Title = "Index";
     //Layout = null;
@@ -42,188 +44,50 @@
                 </div>
             </div>
 
-            <!-- Yazılar -->
+            <!-- Note'lar -->
             <div class="row">
-                <div class="col-sm-4 col-lg-4 col-md-4">
-                    <div class="thumbnail">
-                        <img src="http://placehold.it/320x150" alt="">
-                        <div class="caption">
-                            <h4>
-                                <a href="#">Sit amet, consectetur.</a>
-                            </h4>
-                            <p>
-                                Mi, id sollicitudin urna fermentum ut fusce varius nisl ac ipsum gravida vel pretium tellus.
-                            </p>
-                            <h6 class="text-right">
-                                <span class="glyphicon glyphicon-user"></span> Aytach<br />
-                                <span class="glyphicon glyphicon-time"></span> 30.12.2018 15:54<br />
-                            </h6>
-                        </div>
-                        <div><hr /></div>
-                        <div class="ratings">
-                            <p class="pull-right">
-                                <button class="btn btn-default btn-sm">
-                                    <span class="glyphicon glyphicon-comment"></span> Yorumlar
-                                </button>
-                            </p>
-                            <p>
-                                <button class="btn btn-default btn-sm" type="button">
-                                    <span class="glyphicon glyphicon-star"></span> 15
-                                </button>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-lg-4 col-md-4">
-                    <div class="thumbnail">
-                        <img src="http://placehold.it/320x150" alt="">
-                        <div class="caption">
-                            <h4>
-                                <a href="#">Sit amet, consectetur.</a>
-                            </h4>
-                            <p>
-                                Mi, id sollicitudin urna fermentum ut fusce varius nisl ac ipsum gravida vel pretium tellus.
-                            </p>
-                            <h6 class="text-right">
-                                <span class="glyphicon glyphicon-user"></span> Aytach<br />
-                                <span class="glyphicon glyphicon-time"></span> 30.12.2018 15:54<br />
-                            </h6>
-                        </div>
-                        <div><hr /></div>
-                        <div class="ratings">
-                            <p class="pull-right">
-                                <button class="btn btn-default btn-sm">
-                                    <span class="glyphicon glyphicon-comment"></span> Yorumlar
-                                </button>
-                            </p>
-                            <p>
-                                <button class="btn btn-default btn-sm" type="button">
-                                    <span class="glyphicon glyphicon-star"></span> 15
-                                </button>
-                            </p>
+                @foreach (Note note in Model)
+                {
+                    <div class="col-sm-4 col-lg-4 col-md-4">
+                        <div class="thumbnail">
+                            <img src="http://placehold.it/320x150" alt="@note.Title">
+                            <div class="caption">
+                                <h4>
+                                    <a href="#">@note.Title</a>
+                                </h4>
+                                @if (string.IsNullOrEmpty(note.Text) == false && note.Text.Length > 55)
+                                {
+                                    <p>@(note.Text.Substring(0, 55) + "...")</p>
+                                    <p>
+                                        <a href="#" class="btn btn-default btn-xs">devamı... <span class="glyphicon glyphicon-chevron-right"></span></a>
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p>@note.Text</p>
+                                }
+
+                                <h6 class="text-right">
+                                    @note.Owner.Username <span class="glyphicon glyphicon-user"></span> <br />
+                                    <span class="glyphicon glyphicon-time"></span> @note.ModifiedOn.ToString("dd.MM.yyyy HH:mm")<br />
+                                </h6>
+                            </div>
+                            <div><hr /></div>
+                            <div class="ratings">
+                                <p class="pull-right">
+                                    <button class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-comment"></span> Yorumlar
+                                    </button>
+                                </p>
+                                <p>
+                                    <button class="btn btn-default btn-sm" type="button">
+                                        <span class="glyphicon glyphicon-star"></span> @note.LikeCount
+                                    </button>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-4 col-lg-4 col-md-4">
-                    <div class="thumbnail">
-                        <img src="http://placehold.it/320x150" alt="">
-                        <div class="caption">
-                            <h4>
-                                <a href="#">Sit amet, consectetur.</a>
-                            </h4>
-                            <p>
-                                Mi, id sollicitudin urna fermentum ut fusce varius nisl ac ipsum gravida vel pretium tellus.
-                            </p>
-                            <h6 class="text-right">
-                                <span class="glyphicon glyphicon-user"></span> Aytach<br />
-                                <span class="glyphicon glyphicon-time"></span> 30.12.2018 15:54<br />
-                            </h6>
-                        </div>
-                        <div><hr /></div>
-                        <div class="ratings">
-                            <p class="pull-right">
-                                <button class="btn btn-default btn-sm">
-                                    <span class="glyphicon glyphicon-comment"></span> Yorumlar
-                                </button>
-                            </p>
-                            <p>
-                                <button class="btn btn-default btn-sm" type="button">
-                                    <span class="glyphicon glyphicon-star"></span> 15
-                                </button>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-lg-4 col-md-4">
-                    <div class="thumbnail">
-                        <img src="http://placehold.it/320x150" alt="">
-                        <div class="caption">
-                            <h4>
-                                <a href="#">Sit amet, consectetur.</a>
-                            </h4>
-                            <p>
-                                Mi, id sollicitudin urna fermentum ut fusce varius nisl ac ipsum gravida vel pretium tellus.
-                            </p>
-                            <h6 class="text-right">
-                                <span class="glyphicon glyphicon-user"></span> Aytach<br />
-                                <span class="glyphicon glyphicon-time"></span> 30.12.2018 15:54<br />
-                            </h6>
-                        </div>
-                        <div><hr /></div>
-                        <div class="ratings">
-                            <p class="pull-right">
-                                <button class="btn btn-default btn-sm">
-                                    <span class="glyphicon glyphicon-comment"></span> Yorumlar
-                                </button>
-                            </p>
-                            <p>
-                                <button class="btn btn-default btn-sm" type="button">
-                                    <span class="glyphicon glyphicon-star"></span> 15
-                                </button>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-lg-4 col-md-4">
-                    <div class="thumbnail">
-                        <img src="http://placehold.it/320x150" alt="">
-                        <div class="caption">
-                            <h4>
-                                <a href="#">Sit amet, consectetur.</a>
-                            </h4>
-                            <p>
-                                Mi, id sollicitudin urna fermentum ut fusce varius nisl ac ipsum gravida vel pretium tellus.
-                            </p>
-                            <h6 class="text-right">
-                                <span class="glyphicon glyphicon-user"></span> Aytach<br />
-                                <span class="glyphicon glyphicon-time"></span> 30.12.2018 15:54<br />
-                            </h6>
-                        </div>
-                        <div><hr /></div>
-                        <div class="ratings">
-                            <p class="pull-right">
-                                <button class="btn btn-default btn-sm">
-                                    <span class="glyphicon glyphicon-comment"></span> Yorumlar
-                                </button>
-                            </p>
-                            <p>
-                                <button class="btn btn-default btn-sm" type="button">
-                                    <span class="glyphicon glyphicon-star"></span> 15
-                                </button>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-lg-4 col-md-4">
-                    <div class="thumbnail">
-                        <img src="http://placehold.it/320x150" alt="">
-                        <div class="caption">
-                            <h4>
-                                <a href="#">Sit amet, consectetur.</a>
-                            </h4>
-                            <p>
-                                Mi, id sollicitudin urna fermentum ut fusce varius nisl ac ipsum gravida vel pretium tellus.
-                            </p>
-                            <h6 class="text-right">
-                                <span class="glyphicon glyphicon-user"></span> Aytach<br />
-                                <span class="glyphicon glyphicon-time"></span> 30.12.2018 15:54<br />
-                            </h6>
-                        </div>
-                        <div><hr /></div>
-                        <div class="ratings">
-                            <p class="pull-right">
-                                <button class="btn btn-default btn-sm">
-                                    <span class="glyphicon glyphicon-comment"></span> Yorumlar
-                                </button>
-                            </p>
-                            <p>
-                                <button class="btn btn-default btn-sm" type="button">
-                                    <span class="glyphicon glyphicon-star"></span> 15
-                                </button>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
         </div>
     </div>

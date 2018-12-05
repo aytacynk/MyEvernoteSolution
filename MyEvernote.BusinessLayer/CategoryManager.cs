@@ -17,5 +17,10 @@ namespace MyEvernote.BusinessLayer
             return repo_category.List();
         }
 
+        public Catergory GetCategoryById(int id)
+        {
+            return repo_category.Find(x => x.Id == id);
+        }
+
     }
 }

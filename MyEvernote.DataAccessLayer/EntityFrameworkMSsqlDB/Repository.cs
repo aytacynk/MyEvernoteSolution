@@ -1,5 +1,6 @@
 ﻿using MyEvernote.DataAccessLayer;
 using MyEvernote.DataAccessLayer.Abstract;
+using MyEvernote.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -26,6 +27,11 @@ namespace MyEvernote.DataAccessLayer.EntityFrameworkMSsqlDB
             return _objectSet.ToList();
         }
 
+        public IQueryable<T> ListQueryable()
+        {
+            return _objectSet.AsQueryable<T>();
+        }
+
         public List<T> List(Expression<Func<T, bool>> where)
         {
             return _objectSet.Where(where).ToList();
@@ -34,11 +40,31 @@ namespace MyEvernote.DataAccessLayer.EntityFrameworkMSsqlDB
         public int Insert(T obj)
         {
             _objectSet.Add(obj);
+
+            if (obj is MyEntityBase)
+            {
+                MyEntityBase o = obj as MyEntityBase;
+                DateTime now = DateTime.Now;
+
+                o.CreatedOn = now;
+                o.ModifiedOn = now;
+                o.ModifiedUsername = "system"; //TODO işlem yapan kullanıcı adı yazılacak 
+            }
+
             return Save();
         }
 
         public int Update(T obj)
         {
+
+            if (obj is MyEntityBase)
+            {
+                MyEntityBase o = obj as MyEntityBase;
+
+                o.ModifiedOn = DateTime.Now;
+                o.ModifiedUsername = "system"; //TODO işlem yapan kullanıcı adı yazılacak 
+            }
+
             return Save();
         }
 

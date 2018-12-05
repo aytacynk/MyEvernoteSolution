@@ -22,7 +22,7 @@ body {
 }
 
 .caption {
-    height: 155px;
+    height: 161px;
     overflow: hidden;
 }
 
@@ -31,7 +31,7 @@ body {
     }
 
 .thumbnail {
-    height: 340px;
+    height: 370px;
 }
 
     .thumbnail img {
