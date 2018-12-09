@@ -1,5 +1,6 @@
 ﻿using MyEvernote.BusinessLayer;
 using MyEvernote.Entities;
+using MyEvernote.Entities.Messages;
 using MyEvernote.Entities.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -79,7 +80,13 @@ namespace MyEvernote.WebApp.Controllers
 
                 if (userResult.Errors.Count > 0)
                 {
-                    userResult.Errors.ForEach(x => ModelState.AddModelError("", x));
+                    if (userResult.Errors.Find(x => x.Code == ErrorMessagesCode.UserIsNotActive) != null)
+                    {
+                        ViewBag.SetLink = "http://Home/Activate/1234-4567-78980";
+                    }
+
+                    userResult.Errors.ForEach(x => ModelState.AddModelError("", x.Message));
+
                     return View(model);
                 }
                 Session["login"] = userResult;
@@ -103,31 +110,10 @@ namespace MyEvernote.WebApp.Controllers
 
                 if (userResult.Errors.Count > 0)
                 {
-                    userResult.Errors.ForEach(x => ModelState.AddModelError("", x));
+                    userResult.Errors.ForEach(x => ModelState.AddModelError("", x.Message));
                     return View(model);
                 }
-                //foreach (var item in ModelState)
-                //{
-                //    if (item.Value.Errors.Count > 0)
-                //    {
-                //        return View(model);
-                //    }
-                //}
-                //EvernoteUser user = null;
 
-                //try
-                //{
-                //    user = eum.RegisterUser(model);
-                //}
-                //catch (Exception ex)
-                //{
-                //    ModelState.AddModelError("", ex.Message);
-                //}
-
-                //if (user == null)
-                //{
-                //    return View(model);
-                //}
                 return RedirectToAction("RegisterOk");
             }
             return View(model);
@@ -148,7 +134,8 @@ namespace MyEvernote.WebApp.Controllers
 
         public ActionResult Logout()
         {
-            return View();
+            Session.Clear();
+            return RedirectToAction("Index");
 
         }
 
