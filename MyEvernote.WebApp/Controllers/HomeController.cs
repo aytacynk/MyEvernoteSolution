@@ -89,7 +89,7 @@ namespace MyEvernote.WebApp.Controllers
 
                     return View(model);
                 }
-                Session["login"] = userResult;
+                Session["login"] = userResult.Result as EvernoteUser;
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -124,12 +124,35 @@ namespace MyEvernote.WebApp.Controllers
             return View();
         }
 
-        public ActionResult UserActivate(Guid activeId)
+        public ActionResult UserActivate(Guid id)
         {
-            //Kullanıcı aktivasyonu sağlanacak.
+            EvernoteUserManager eum = new EvernoteUserManager();
+            BusinessLayerResult<EvernoteUser> res = eum.ActivateUser(id);
 
+            if (res.Errors.Count > 0)
+            {
+                TempData["errors"] = res.Errors;
+                return RedirectToAction("UserActivateCancel");
+            }
+
+            return RedirectToAction("UserActivateOK");
+        }
+
+        public ActionResult UserActivateOK()
+        {
             return View();
+        }
 
+        public ActionResult UserActivateCancel()
+        {
+            List<ErrorMessageObject> errors = null;
+
+            if (TempData["errors"] != null)
+            {
+                errors = TempData["errors"] as List<ErrorMessageObject>;
+            }
+
+            return View(errors);
         }
 
         public ActionResult Logout()
@@ -138,8 +161,6 @@ namespace MyEvernote.WebApp.Controllers
             return RedirectToAction("Index");
 
         }
-
-
 
     }
 }

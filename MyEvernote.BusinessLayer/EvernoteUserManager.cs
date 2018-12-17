@@ -1,4 +1,5 @@
-﻿using MyEvernote.DataAccessLayer.EntityFrameworkMSsqlDB;
+﻿using MyEvernote.Common.Helpers;
+using MyEvernote.DataAccessLayer.EntityFrameworkMSsqlDB;
 using MyEvernote.Entities;
 using MyEvernote.Entities.Messages;
 using MyEvernote.Entities.ValueObjects;
@@ -52,6 +53,13 @@ namespace MyEvernote.BusinessLayer
 
                     //TODO: aktivasyon maili atılacak.
                     //layerResult.Result.ActivateGuid
+                    string siteUri = ConfigHelper.Get<string>("SiteRootUri");
+                    string activateUri = $"{siteUri}/Home/UserActivate/{layerResult.Result.ActivateGuid}";
+
+                    string body = ($"Merhaba {layerResult.Result.Username} ;<br><br>Hesabınızı Aktifleştirmek için <a href='{activateUri}' target='_blank'>tıklayınız</a>");
+
+                    MailHelper.SendMail(body, layerResult.Result.Email, "MyEvernote Hesap Aktifleştirme");
+
                 }
             }
 
@@ -79,5 +87,32 @@ namespace MyEvernote.BusinessLayer
             }
             return layerResult;
         }
+
+
+        public BusinessLayerResult<EvernoteUser> ActivateUser(Guid activateId)
+        {
+            BusinessLayerResult<EvernoteUser> layerResult = new BusinessLayerResult<EvernoteUser>();
+
+            layerResult.Result = repo_evernoteuser.Find(x => x.ActivateGuid == activateId);
+
+            if (layerResult.Result != null)
+            {
+                if (layerResult.Result.IsActive)
+                {
+                    layerResult.AddError(ErrorMessagesCode.UserAlreadyActive, "Kullanıcı zaten aktif edilmiştir.");
+                    return layerResult;
+                }
+                layerResult.Result.IsActive = true;
+                repo_evernoteuser.Update(layerResult.Result);
+
+            }
+
+            else
+            {
+                layerResult.AddError(ErrorMessagesCode.ActivateIdDoesNotExist, "Aktifleştirelecek kullanıcı bulunamadı.");
+            }
+            return layerResult;
+        }
     }
+
 }

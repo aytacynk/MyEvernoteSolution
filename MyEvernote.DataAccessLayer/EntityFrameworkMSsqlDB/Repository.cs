@@ -49,7 +49,7 @@ namespace MyEvernote.DataAccessLayer.EntityFrameworkMSsqlDB
 
                 o.CreatedOn = now;
                 o.ModifiedOn = now;
-                o.ModifiedUsername = App.Common.GetCuurentUsername(); //TODO işlem yapan kullanıcı adı yazılacak 
+                o.ModifiedUsername = App.Common.GetCuurentUsername(); //O anki kullanıcı ismini dönen yerdir.  
             }
 
             return Save();
@@ -63,7 +63,7 @@ namespace MyEvernote.DataAccessLayer.EntityFrameworkMSsqlDB
                 MyEntityBase o = obj as MyEntityBase;
 
                 o.ModifiedOn = DateTime.Now;
-                o.ModifiedUsername = App.Common.GetCuurentUsername();  //TODO işlem yapan kullanıcı adı yazılacak 
+                o.ModifiedUsername = App.Common.GetCuurentUsername();  // O anki kullanıcı ismini dönen yerdir. 
             }
 
             return Save();
