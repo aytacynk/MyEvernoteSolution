@@ -5,7 +5,7 @@
     ViewBag.Title = "Profil Düzenle";
 }
 
-<link href="~/Content/login-register.css" rel="stylesheet" />
+<link href="~/Content/validation-summary.css" rel="stylesheet" />
 
 <div class="container">
 
@@ -21,44 +21,45 @@
             <div class="form-horizontal">
                 <div class="col-md-3">
                     <img src="~/Images/@Model.ProfileImaFilename" class="img-circle" width="128" height="128" />
+                    @Html.HiddenFor(model => model.ProfileImaFilename)
                     <br /><br />
                     <input type="file" name="ProfileImage" class="form-control" id="ProfileImage" /><br />
                     <span class="glyphicon glyphicon-info-sign">&nbsp;</span>
                     <span><i>Lütfen jpg, jpeg ya da png formatı kullanın</i></span>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-5">
 
                     @Html.ValidationSummary(false)
                     @Html.HiddenFor(model => model.Id)
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
                             @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Surname, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
-                        <div class="col-md-10">
+                        @Html.LabelFor(model => model.Surname, htmlAttributes: new { @class = "control-label col-md-3 text-left" })
+                        <div class="col-md-9">
                             @Html.EditorFor(model => model.Surname, new { htmlAttributes = new { @class = "form-control" } })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                        @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
                             @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control" } })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
                             @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", type = "password" } })
                         </div>
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
                             @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", type = "email" } })
                         </div>
                     </div>
@@ -69,7 +70,9 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="col-md-4">
+                    &nbsp;
+                </div>
             </div>
         }
 
@@ -77,7 +80,7 @@
 </div>
 
 @*<script>
-    $(document).ready(function () {
-        $("footer").parent().hide();
-    });
-</script>*@
+        $(document).ready(function () {
+            $("footer").parent().hide();
+        });
+    </script>*@

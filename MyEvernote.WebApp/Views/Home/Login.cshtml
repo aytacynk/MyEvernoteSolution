@@ -5,6 +5,7 @@
     ViewBag.Title = "MyEvernote Giriş Sayfası";
 }
 <link href="~/Content/login-register.css" rel="stylesheet" />
+<link href="~/Content/validation-summary.css" rel="stylesheet" />
 
 @using (Html.BeginForm())
 {
@@ -20,7 +21,7 @@
 
                     @if (ViewBag.SetLink != null)
                     {
-                    <a href="@ViewBag.SetLink" class="btn btn-primary">Activate</a>
+                        <a href="@ViewBag.SetLink" class="btn btn-primary">Activate</a>
                     }
 
                     <div class="input-group ">
@@ -45,8 +46,8 @@
 
 
 @*<script>
-    $(document).ready(function () {
-        $("footer").parent().hide();
-    });
-</script>*@
+        $(document).ready(function () {
+            $("footer").parent().hide();
+        });
+    </script>*@
 

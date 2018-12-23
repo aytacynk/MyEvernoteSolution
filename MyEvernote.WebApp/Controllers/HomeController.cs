@@ -119,31 +119,37 @@ namespace MyEvernote.WebApp.Controllers
         [HttpPost]
         public ActionResult EditProfile(EvernoteUser user, HttpPostedFileBase ProfileImage)
         {
+            ModelState.Remove("ModifiedUsername");
 
-            if (ProfileImage != null && (ProfileImage.ContentType == "image/jpeg" || ProfileImage.ContentType == "image/jpg" || ProfileImage.ContentType == "image/png"))
+            if (ModelState.IsValid)
             {
-                string filename = $"user{user.Id}.{ProfileImage.ContentType.Split('/')[1]}";
-
-                ProfileImage.SaveAs(Server.MapPath($"~/Images/{filename}"));
-                user.ProfileImaFilename = filename;
-            }
-
-            EvernoteUserManager eum = new EvernoteUserManager();
-            BusinessLayerResult<EvernoteUser> res = eum.UpdateProfile(user);
-
-            if (res.Errors.Count > 0)
-            {
-                ErrorViewModel erroeNotfyObj = new ErrorViewModel()
+                if (ProfileImage != null && (ProfileImage.ContentType == "image/jpeg" || ProfileImage.ContentType == "image/jpg" || ProfileImage.ContentType == "image/png"))
                 {
-                    Items = res.Errors,
-                    Title = "Profil Güncellenemedi.",
-                    RedirectingUrl = "/Home/EditProfile"
-                };
-                return View("Error", erroeNotfyObj);
+                    string filename = $"user{user.Id}.{ProfileImage.ContentType.Split('/')[1]}";
+
+                    ProfileImage.SaveAs(Server.MapPath($"~/Images/{filename}"));
+                    user.ProfileImaFilename = filename;
+                }
+
+                EvernoteUserManager eum = new EvernoteUserManager();
+                BusinessLayerResult<EvernoteUser> res = eum.UpdateProfile(user);
+
+                if (res.Errors.Count > 0)
+                {
+                    ErrorViewModel erroeNotfyObj = new ErrorViewModel()
+                    {
+                        Items = res.Errors,
+                        Title = "Profil Güncellenemedi.",
+                        RedirectingUrl = "/Home/EditProfile"
+                    };
+                    return View("Error", erroeNotfyObj);
+                }
+
+                Session["login"] = res.Result as EvernoteUser;
+                return RedirectToAction("ShowProfile");
             }
 
-            Session["login"] = res.Result as EvernoteUser;
-            return RedirectToAction("ShowProfile");
+            return View(user);
         }
 
 
