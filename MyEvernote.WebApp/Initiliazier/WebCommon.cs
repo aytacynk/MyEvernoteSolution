@@ -15,8 +15,8 @@ namespace MyEvernote.WebApp.Initiliazier
         {
             if (HttpContext.Current.Session["login"] != null)
             {
-                BusinessLayerResult<EvernoteUser> user = HttpContext.Current.Session["login"] as BusinessLayerResult<EvernoteUser>;
-                return user.Result.Username;
+                EvernoteUser user = HttpContext.Current.Session["login"] as EvernoteUser;
+                return user.Username;
             }
 
             return "system";

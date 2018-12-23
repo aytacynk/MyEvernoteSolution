@@ -26,7 +26,8 @@ namespace MyEvernote.DataAccessLayer.EntityFrameworkMSsqlDB
                 IsActive = true,
                 Password = "123456",
                 ModifiedUsername = "Aytach",
-                ModifiedOn = DateTime.Now.AddMinutes(5)
+                ModifiedOn = DateTime.Now.AddMinutes(5),
+                ProfileImaFilename = "user.png"
             };
             //Adding Fake standart user
 
@@ -42,7 +43,9 @@ namespace MyEvernote.DataAccessLayer.EntityFrameworkMSsqlDB
                 IsActive = true,
                 Password = "123456",
                 ModifiedUsername = "Aytach",
-                ModifiedOn = DateTime.Now.AddMinutes(65)
+                ModifiedOn = DateTime.Now.AddMinutes(65),
+                ProfileImaFilename = "user.png"
+
             };
             context.EvernoteUsers.Add(admin);
             context.EvernoteUsers.Add(standartUser);
@@ -62,6 +65,8 @@ namespace MyEvernote.DataAccessLayer.EntityFrameworkMSsqlDB
                     IsActive = true,
                     Password = "123",
                     ModifiedUsername = $"user{i}",
+                    ProfileImaFilename = "user.png"
+
                 };
                 context.EvernoteUsers.Add(user);
             }

@@ -2,6 +2,7 @@
 using MyEvernote.Entities;
 using MyEvernote.Entities.Messages;
 using MyEvernote.Entities.ValueObjects;
+using MyEvernote.WebApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,8 +66,132 @@ namespace MyEvernote.WebApp.Controllers
             return View();
         }
 
+
+
+        public ActionResult ShowProfile()
+        {
+            EvernoteUser currentUser = Session["login"] as EvernoteUser;
+
+            EvernoteUserManager eum = new EvernoteUserManager();
+            BusinessLayerResult<EvernoteUser> res = eum.GetUserById(currentUser.Id);
+
+            if (res.Errors.Count > 0)
+            {
+                ErrorViewModel ErrornotfyError = new ErrorViewModel()
+                {
+                    Title = "Hata Oluştu",
+                    RedirectingUrl = "/Home/Index",
+                    Items = res.Errors
+                };
+
+                return View("Error", ErrornotfyError);
+
+            }
+
+            return View(res.Result);
+        }
+
+
+        public ActionResult EditProfile()
+        {
+            EvernoteUser currentUser = Session["login"] as EvernoteUser;
+
+            EvernoteUserManager eum = new EvernoteUserManager();
+            BusinessLayerResult<EvernoteUser> res = eum.GetUserById(currentUser.Id);
+
+            if (res.Errors.Count > 0)
+            {
+                ErrorViewModel ErrornotfyError = new ErrorViewModel()
+                {
+                    Title = "Hata Oluştu",
+                    RedirectingUrl = "/Home/Index",
+                    Items = res.Errors
+                };
+
+                return View("Error", ErrornotfyError);
+
+            }
+
+            return View(res.Result);
+
+        }
+
+        [HttpPost]
+        public ActionResult EditProfile(EvernoteUser user, HttpPostedFileBase ProfileImage)
+        {
+
+            if (ProfileImage != null && (ProfileImage.ContentType == "image/jpeg" || ProfileImage.ContentType == "image/jpg" || ProfileImage.ContentType == "image/png"))
+            {
+                string filename = $"user{user.Id}.{ProfileImage.ContentType.Split('/')[1]}";
+
+                ProfileImage.SaveAs(Server.MapPath($"~/Images/{filename}"));
+                user.ProfileImaFilename = filename;
+            }
+
+            EvernoteUserManager eum = new EvernoteUserManager();
+            BusinessLayerResult<EvernoteUser> res = eum.UpdateProfile(user);
+
+            if (res.Errors.Count > 0)
+            {
+                ErrorViewModel erroeNotfyObj = new ErrorViewModel()
+                {
+                    Items = res.Errors,
+                    Title = "Profil Güncellenemedi.",
+                    RedirectingUrl = "/Home/EditProfile"
+                };
+                return View("Error", erroeNotfyObj);
+            }
+
+            Session["login"] = res.Result as EvernoteUser;
+            return RedirectToAction("ShowProfile");
+        }
+
+
+        public ActionResult DeleteProfile()
+        {
+            EvernoteUser currentUser = Session["login"] as EvernoteUser;
+
+            EvernoteUserManager eum = new EvernoteUserManager();
+
+            BusinessLayerResult<EvernoteUser> res = eum.RemoveUserById(currentUser.Id);
+
+            if (res.Errors.Count > 0)
+            {
+                ErrorViewModel errorNotfyObj = new ErrorViewModel
+                {
+                    Title = "Profil Silinemedi.",
+                    RedirectingUrl = "/Home/ShowProfile",
+                    Items = res.Errors
+                };
+
+                return View("Error", errorNotfyObj);
+            }
+
+            Session.Clear();
+
+            return RedirectToAction("Index");
+        }
+
+
+        public ActionResult TestNotify()
+        {
+            ErrorViewModel model = new ErrorViewModel()
+            {
+                Header = "Yönlendiriliyorsunuz",
+                Title = "Ok Test",
+                RedirectingTimeout = 10000,
+                Items = new List<ErrorMessageObject>() {
+                    new ErrorMessageObject() {  Message="Test Başarılı"},
+                    new ErrorMessageObject { Message="Test Başarılı 2" } }
+            };
+
+            return View("Error", model);
+        }
+
+
         public ActionResult Login()
         {
+
             return View();
         }
 
@@ -95,6 +220,7 @@ namespace MyEvernote.WebApp.Controllers
             return View(model);
         }
 
+
         public ActionResult Register()
         {
             return View();
@@ -114,15 +240,25 @@ namespace MyEvernote.WebApp.Controllers
                     return View(model);
                 }
 
-                return RedirectToAction("RegisterOk");
+                OkViewModel notifyObj = new OkViewModel()
+                {
+                    Title = "Kayıt Başarılı",
+                    RedirectingUrl = "/Home/Login"
+                };
+                notifyObj.Items.Add("Lütfen e-posta adresinize gönderdiğimiz aktivasyon link'ine tıklayarak hesabınızı aktive ediniz.Hesabınızı aktive etmeden not ekleyemez ve beğenme yapamazsınız.");
+
+
+                return View("Ok", notifyObj);
             }
             return View(model);
         }
 
-        public ActionResult RegisterOk()
-        {
-            return View();
-        }
+
+        //public ActionResult RegisterOk()
+        //{
+        //    return View();
+        //}
+
 
         public ActionResult UserActivate(Guid id)
         {
@@ -131,29 +267,45 @@ namespace MyEvernote.WebApp.Controllers
 
             if (res.Errors.Count > 0)
             {
-                TempData["errors"] = res.Errors;
-                return RedirectToAction("UserActivateCancel");
+                ErrorViewModel ErrornotfyError = new ErrorViewModel()
+                {
+                    Title = "Geçersiz İşlem",
+                    RedirectingUrl = "/Home/Index",
+                    Items = res.Errors
+                };
+
+                return View("Error", ErrornotfyError);
             }
-
-            return RedirectToAction("UserActivateOK");
-        }
-
-        public ActionResult UserActivateOK()
-        {
-            return View();
-        }
-
-        public ActionResult UserActivateCancel()
-        {
-            List<ErrorMessageObject> errors = null;
-
-            if (TempData["errors"] != null)
+            OkViewModel okNotfyObj = new OkViewModel()
             {
-                errors = TempData["errors"] as List<ErrorMessageObject>;
-            }
+                Title = "Hesap Aktifleştirildi.",
+                RedirectingUrl = "/Home/Index"
+            };
 
-            return View(errors);
+            okNotfyObj.Items.Add("Hesap Başarılı Bir Şekiilde Aktifleştirildi..Artık Note paylaşabilir ve Beğenme yapabilirsiniz.");
+
+            return View("Ok", okNotfyObj);
         }
+
+
+        //public ActionResult UserActivateOK()
+        //{
+        //    return View();
+        //}
+
+
+        //public ActionResult UserActivateCancel()
+        //{
+        //    List<ErrorMessageObject> errors = null;
+
+        //    if (TempData["errors"] != null)
+        //    {
+        //        errors = TempData["errors"] as List<ErrorMessageObject>;
+        //    }
+
+        //    return View(errors);
+        //}
+
 
         public ActionResult Logout()
         {

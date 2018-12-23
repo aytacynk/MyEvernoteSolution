@@ -45,6 +45,7 @@ namespace MyEvernote.BusinessLayer
                     ActivateGuid = Guid.NewGuid(),
                     IsActive = false,
                     IsAdmin = false,
+                    ProfileImaFilename = "user.png"
                 });
 
                 if (dbResult > 0)
@@ -67,6 +68,23 @@ namespace MyEvernote.BusinessLayer
         }
 
 
+
+        public BusinessLayerResult<EvernoteUser> GetUserById(int id)
+        {
+            BusinessLayerResult<EvernoteUser> res = new BusinessLayerResult<EvernoteUser>();
+
+            res.Result = repo_evernoteuser.Find(x => x.Id == id);
+
+            if (res.Result == null)
+            {
+                res.AddError(ErrorMessagesCode.UserNotFound, "Kullanıcı Bulunamadı.");
+            }
+
+            return res;
+        }
+
+
+
         public BusinessLayerResult<EvernoteUser> LoginUser(LoginViewModel data)
         {
             BusinessLayerResult<EvernoteUser> layerResult = new BusinessLayerResult<EvernoteUser>();
@@ -87,6 +105,7 @@ namespace MyEvernote.BusinessLayer
             }
             return layerResult;
         }
+
 
 
         public BusinessLayerResult<EvernoteUser> ActivateUser(Guid activateId)
@@ -112,6 +131,67 @@ namespace MyEvernote.BusinessLayer
                 layerResult.AddError(ErrorMessagesCode.ActivateIdDoesNotExist, "Aktifleştirelecek kullanıcı bulunamadı.");
             }
             return layerResult;
+        }
+
+
+
+        public BusinessLayerResult<EvernoteUser> RemoveUserById(int id)
+        {
+            EvernoteUser user = repo_evernoteuser.Find(x => x.Id == id);
+            BusinessLayerResult<EvernoteUser> res = new BusinessLayerResult<EvernoteUser>();
+
+            if (user != null)
+            {
+                if (repo_evernoteuser.Delete(user) == 0)
+                {
+                    res.AddError(ErrorMessagesCode.UserCoulNotRemove, "Kullanıcı Silinemedi");
+                    return res;
+                }
+            }
+            else
+            {
+                res.AddError(ErrorMessagesCode.UserCouldNotFound, "KUllanıcı Bulunamadı");
+            }
+            return res;
+        }
+
+
+
+        public BusinessLayerResult<EvernoteUser> UpdateProfile(EvernoteUser data)
+        {
+            EvernoteUser db_user = repo_evernoteuser.Find(x => x.Username == data.Username || x.Email == data.Email);
+            BusinessLayerResult<EvernoteUser> res = new BusinessLayerResult<EvernoteUser>();
+
+            if (db_user != null && db_user.Id != data.Id)
+            {
+                if (db_user.Username == data.Username)
+                {
+                    res.AddError(ErrorMessagesCode.UsernameAlreadyExist, "Kullanıcı Adı Kayıtlıdır.");
+                }
+                if (db_user.Email == data.Email)
+                {
+                    res.AddError(ErrorMessagesCode.EmailAlreadyExist, "E-posta Adresi kayıtlıdır");
+                }
+                return res;
+            }
+            res.Result = repo_evernoteuser.Find(x => x.Id == data.Id);
+            res.Result.Email = data.Email;
+            res.Result.Name = data.Name;
+            res.Result.Surname = data.Surname;
+            res.Result.Username = data.Username;
+            res.Result.Password = data.Password;
+
+            if (string.IsNullOrEmpty(data.ProfileImaFilename) == false)
+            {
+                res.Result.ProfileImaFilename = data.ProfileImaFilename;
+            }
+
+            if (repo_evernoteuser.Update(res.Result) == 0)
+            {
+                res.AddError(ErrorMessagesCode.ProfileCouldNotUpdated, "Profil Güncellenemedi.");
+            }
+
+            return res;
         }
     }
 
