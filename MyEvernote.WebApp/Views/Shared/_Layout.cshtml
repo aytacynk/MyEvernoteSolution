@@ -19,13 +19,6 @@
 
     <script src="~/Scripts/jquery-3.1.1.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 <body>
     @{
@@ -55,10 +48,31 @@
                 <ul class="nav navbar-nav">
                     @if (user != null)
                     {
-                        <li>
-                            <a href="#"><span class="glyphicon glyphicon-wrench"></span> Yönetim</a>
+                        <li class="dropdown">
+                            <a href="/Note/MyNotes" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-wrench"></span> Yönetim <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="/Note/AddNew"><span class="glyphicon glyphicon-plus"></span> Not Ekle</a>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="/Note/MyNotes"><span class="glyphicon glyphicon-th-list"></span> Notlarım</a>
+                                </li>
+                                <li>
+                                    <a href="/Note/MyLikedNotes"><span class="glyphicon glyphicon-heart"></span> Beğendiklerim</a>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                @if (user.IsAdmin)
+                                {
+                                    <li>
+                                        <a href="/Category/AddNew"><span class="glyphicon glyphicon-plus"></span> Kategori Ekle</a>
+                                    </li>
+                                    <li>
+                                        <a href="/Category/List"><span class="glyphicon glyphicon-th-list"></span> Kategoriler</a>
+                                    </li>
+                                }
+                            </ul>
                         </li>
-
                     }
 
                     <li>
@@ -85,9 +99,34 @@
                     }
                     else
                     {
-                        <li class="">
-                            <a href="/Home/ShowProfile"><span class="glyphicon glyphicon-user"></span> @user.Username</a>
+
+                        <li class="dropdown">
+                            <a href="/Home/ShowProfile" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-user"></span> @user.Username <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="/Home/ShowProfile">
+                                        <span class="glyphicon glyphicon-user"></span>
+                                        Profili Göster
+                                    </a>
+                                </li>
+                                <li class="divider" role="separator"></li>
+                                <li>
+                                    <a href="/Home/EditProfile">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                        Profili Düzenle
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/Home/DeleteProfile" onclick="return confirm('Hesabı silmek istediğinizden emin misiniz?')">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                        Profili Sil
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
+
                         <li class="">
                             <a href="/Home/Logout"><span class="glyphicon glyphicon-log-out"></span> Çıkış</a>
                         </li>
