@@ -5,22 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyEvernote.BusinessLayer.Abstract;
 
 namespace MyEvernote.BusinessLayer
 {
-    public class CategoryManager
+    public class CategoryManager : ManagerBase<Catergory>
     {
-        private Repository<Catergory> repo_category = new Repository<Catergory>();
 
-        public List<Catergory> GetCatergories()
-        {
-            return repo_category.List();
-        }
 
-        public Catergory GetCategoryById(int id)
-        {
-            return repo_category.Find(x => x.Id == id);
-        }
 
     }
 }
