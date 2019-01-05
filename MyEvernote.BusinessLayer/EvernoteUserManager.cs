@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MyEvernote.BusinessLayer
 {
-    public class EvernoteUserManager :ManagerBase<EvernoteUser>
+    public class EvernoteUserManager : ManagerBase<EvernoteUser>
     {
 
         public BusinessLayerResult<EvernoteUser> RegisterUser(RegisterViewModel data)

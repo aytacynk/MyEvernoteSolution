@@ -21,5 +21,22 @@ namespace MyEvernote.DataAccessLayer.EntityFrameworkMSsqlDB
             Database.SetInitializer(new MyInitializer());
         }
 
+        //override ile yapılan metoddur.
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            //Fluent API : İlişiki database'de ki tabloları "Cascade" olarak yapmaya yaratan metdoddur.
+
+            modelBuilder.Entity<Note>()
+                .HasMany(n => n.Comments)
+                .WithRequired(c => c.Note)
+                .WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<Note>()
+                .HasMany(n => n.Likes)
+                .WithRequired(c => c.Note)
+                .WillCascadeOnDelete(true);
+
+        }
+
     }
 }

@@ -48,6 +48,10 @@ namespace MyEvernote.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Catergory catergory)
         {
+            ModelState.Remove("CreatedOn");
+            ModelState.Remove("ModifiedOn");
+            ModelState.Remove("ModifiedUsername");
+
             if (ModelState.IsValid)
             {
                 catManager.Insert(catergory);
@@ -80,9 +84,17 @@ namespace MyEvernote.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Catergory catergory)
         {
+            ModelState.Remove("CreatedOn");
+            ModelState.Remove("ModifiedOn");
+            ModelState.Remove("ModifiedUsername");
+
             if (ModelState.IsValid)
             {
                 // TODO : İncele
+                Catergory cat = catManager.Find(x => x.Id == catergory.Id);
+                cat.Title = catergory.Title;
+                cat.Description = catergory.Description;
+
                 catManager.Update(catergory);
 
                 return RedirectToAction("Index");
@@ -117,6 +129,7 @@ namespace MyEvernote.WebApp.Controllers
             Catergory catergory = catManager.Find(x => x.Id == id);
             catManager.Delete(catergory);
 
+            
             return RedirectToAction("Index");
         }
 

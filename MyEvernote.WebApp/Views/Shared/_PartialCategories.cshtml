@@ -2,8 +2,8 @@
 @using MyEvernote.Entities
 
 @{
-    CategoryManager cm = new CategoryManager();
-    List<Catergory> list = cm.GetCatergories();
+    CategoryManager catManager = new CategoryManager();
+    List<Catergory> list = catManager.List();
 
 }
 
