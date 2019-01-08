@@ -52,23 +52,30 @@
                             <a href="/Note/MyNotes" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-wrench"></span> Yönetim <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="/Note/AddNew"><span class="glyphicon glyphicon-plus"></span> Not Ekle</a>
+                                    @Bootstrap.LinkMenu("/Note/AddNew", "plus", " Not Ekle")
                                 </li>
                                 <li role="separator" class="divider"></li>
                                 <li>
-                                    <a href="/Note/MyNotes"><span class="glyphicon glyphicon-th-list"></span> Notlarım</a>
+                                    @Bootstrap.LinkMenu("/Note/MyNotes", "th-list", " Notlarım")
                                 </li>
                                 <li>
-                                    <a href="/Note/MyLikedNotes"><span class="glyphicon glyphicon-heart"></span> Beğendiklerim</a>
+                                    @Bootstrap.LinkMenu("/Note/MyLikedNotes", "heart", " Beğendiklerim")
                                 </li>
-                                <li role="separator" class="divider"></li>
                                 @if (user.IsAdmin)
                                 {
+                                    <li role="separator" class="divider"></li>
                                     <li>
-                                        <a href="/Catergory/Create"><span class="glyphicon glyphicon-plus"></span> Kategori Ekle</a>
+                                        @Bootstrap.LinkMenu("/Catergory/Create", "plus", " Kategori Ekle")
                                     </li>
                                     <li>
-                                        <a href="/Catergory/Index"><span class="glyphicon glyphicon-th-list"></span> Kategoriler</a>
+                                        @Bootstrap.LinkMenu("/Catergory/Index", "th-list", " Kategoriler")
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li>
+                                        @Bootstrap.LinkMenu("/EvernoteUser/Create", "plus", " Kullanıcı Ekle")
+                                    </li>
+                                    <li>
+                                        @Bootstrap.LinkMenu("/EvernoteUser/Index", "th-list", " Kullanıcılar")
                                     </li>
                                 }
                             </ul>

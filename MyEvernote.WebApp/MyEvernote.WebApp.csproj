@@ -137,6 +137,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CatergoryController.cs" />
+    <Compile Include="Controllers\EvernoteUserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -170,6 +171,11 @@
     <Content Include="Views\Catergory\Details.cshtml" />
     <Content Include="Views\Catergory\Edit.cshtml" />
     <Content Include="Views\Catergory\Index.cshtml" />
+    <Content Include="Views\EvernoteUser\Create.cshtml" />
+    <Content Include="Views\EvernoteUser\Delete.cshtml" />
+    <Content Include="Views\EvernoteUser\Details.cshtml" />
+    <Content Include="Views\EvernoteUser\Edit.cshtml" />
+    <Content Include="Views\EvernoteUser\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

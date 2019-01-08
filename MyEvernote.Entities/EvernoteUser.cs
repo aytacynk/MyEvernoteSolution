@@ -23,7 +23,7 @@ namespace MyEvernote.Entities
         [DisplayName("Kullanıcı Adı"),
             Required(ErrorMessage = "{0} alanı boş geçilemez."),
             StringLength(25, ErrorMessage = "{0} alanı max. {1} karakter olmalıdır.")]
-        public string Username { get; set; }    
+        public string Username { get; set; }
 
         [DisplayName("E-posta"),
             Required(ErrorMessage = "{0} alanı boş geçilemez."),
@@ -35,14 +35,16 @@ namespace MyEvernote.Entities
             StringLength(25, ErrorMessage = "{0} alanı max. {1} karakter olmalıdır.")]
         public string Password { get; set; }
 
-        [StringLength(30)]      // images/user12.jpg gibi gelecek
-        public string ProfileImaFilename { get; set; }
+        [StringLength(30), ScaffoldColumn(false)] // ScaffoldColumn demek otomotaik üretmede değerler gelmez
+        public string ProfileImaFilename { get; set; } // images/user12.jpg gibi gelecek
 
+        [DisplayName("Is Active")]
         public bool IsActive { get; set; }
 
+        [DisplayName("Is Admin")]
         public bool IsAdmin { get; set; }
 
-        [Required]
+        [Required, ScaffoldColumn(false)]
         public Guid ActivateGuid { get; set; }
 
         public virtual List<Note> Notes { get; set; }
