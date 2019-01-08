@@ -40,10 +40,8 @@
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-success">
-                            <span class="glyphicon glyphicon-plus"></span> Create
-                        </button>
-                        @Html.ActionLink("Back to List", "Index", "Catergory", null, new { @class = "btn btn-default" })
+                        @Bootstrap.Button("success", string.Empty, "submit", "plus", " Create")
+                        @Bootstrap.LinkButton("/Catergory/Index/", "default", string.Empty, string.Empty, "arrow-left", " Back to List")
                     </div>
                 </div>
             </div>

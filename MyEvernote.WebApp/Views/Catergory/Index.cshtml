@@ -1,8 +1,10 @@
-﻿@model IEnumerable<MyEvernote.Entities.Catergory>
+﻿@using MyEvernote.WebApp
+@model IEnumerable<MyEvernote.Entities.Catergory>
 
 @{
     ViewBag.Title = "Index";
 }
+
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <h2>Kategoriler</h2>
@@ -56,15 +58,11 @@
                         @Html.DisplayFor(modelItem => item.ModifiedUsername)
                     </td>
                     <td>
-                        <a href="/Catergory/Edit/@item.Id" class="btn btn-warning btn-xs" title="Edit">
-                            <span class="glyphicon glyphicon-edit"></span> 
-                        </a>
-                        <a href="/Catergory/Details/@item.Id" class="btn btn-info btn-xs" title="Details">
-                            <span class="glyphicon glyphicon-search"></span> 
-                        </a>
-                        <a href="/Catergory/Delete/@item.Id" class="btn btn-danger btn-xs" title="Delete">
-                            <span class="glyphicon glyphicon-trash"></span> 
-                        </a>
+                        @Bootstrap.LinkButton("/Catergory/Edit/" + item.Id, "warning", "btn-xs", "Edit", "edit", string.Empty)
+
+                        @Bootstrap.LinkButton("/Catergory/Details/" + item.Id, "info", "btn-xs", "Details", "search", string.Empty)
+
+                        @Bootstrap.LinkButton("/Catergory/Delete/" + item.Id, "danger", "btn-xs", "Delete", "trash", string.Empty)
                     </td>
                 </tr>
             }
