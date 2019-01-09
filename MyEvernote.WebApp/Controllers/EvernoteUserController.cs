@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MyEvernote.BusinessLayer;
+using MyEvernote.BusinessLayer.Results;
 using MyEvernote.Entities;
 
 namespace MyEvernote.WebApp.Controllers
@@ -19,6 +20,7 @@ namespace MyEvernote.WebApp.Controllers
         {
             return View(evernoteUserManager.List());
         }
+
 
         public ActionResult Details(int? id)
         {
@@ -36,6 +38,7 @@ namespace MyEvernote.WebApp.Controllers
             return View(evernoteUser);
         }
 
+
         public ActionResult Create()
         {
             return View();
@@ -45,10 +48,21 @@ namespace MyEvernote.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(EvernoteUser evernoteUser)
         {
+            ModelState.Remove("CreatedOn");
+            ModelState.Remove("ModifiedOn");
+            ModelState.Remove("ModifiedUsername");
+
             if (ModelState.IsValid)
             {
                 // TODO : düzeltilecek..
-                evernoteUserManager.Insert(evernoteUser);
+
+                BusinessLayerResult<EvernoteUser> res = evernoteUserManager.Insert(evernoteUser);
+
+                if (res.Errors.Count > 0)
+                {
+                    res.Errors.ForEach(x => ModelState.AddModelError("", x.Message));
+                    return View(evernoteUser);
+                }
 
                 return RedirectToAction("Index");
             }
@@ -76,16 +90,29 @@ namespace MyEvernote.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(EvernoteUser evernoteUser)
         {
+            ModelState.Remove("CreatedOn");
+            ModelState.Remove("ModifiedOn");
+            ModelState.Remove("ModifiedUsername");
+
             if (ModelState.IsValid)
             {
                 // TODO : Düzenlenecek update işlemine göre..
 
                 //evernoteUserManager.Update(evernoteUser);
 
+                BusinessLayerResult<EvernoteUser> res = evernoteUserManager.Update(evernoteUser);
+
+                if (res.Errors.Count > 0)
+                {
+                    res.Errors.ForEach(x => ModelState.AddModelError("", x.Message));
+                    return View(evernoteUser);
+                }
+
                 return RedirectToAction("Index");
             }
             return View(evernoteUser);
         }
+
 
         public ActionResult Delete(int? id)
         {
@@ -102,6 +129,7 @@ namespace MyEvernote.WebApp.Controllers
             }
             return View(evernoteUser);
         }
+
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

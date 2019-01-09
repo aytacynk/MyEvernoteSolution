@@ -35,7 +35,7 @@ namespace MyEvernote.BusinessLayer
             }
             else
             {
-                int dbResult = Insert(new EvernoteUser
+                int dbResult = base.Insert(new EvernoteUser
                 {
                     Username = data.Username,
                     Email = data.EMail,
@@ -179,13 +179,88 @@ namespace MyEvernote.BusinessLayer
                 res.Result.ProfileImaFilename = data.ProfileImaFilename;
             }
 
-            if (Update(res.Result) == 0)
+            if (base.Update(res.Result) == 0)
             {
                 res.AddError(ErrorMessagesCode.ProfileCouldNotUpdated, "Profil Güncellenemedi.");
             }
 
             return res;
         }
-    }
 
+
+
+        public new BusinessLayerResult<EvernoteUser> Insert(EvernoteUser data) // new ile methodHiding yaptık.
+        {
+            // Method hiding ...
+
+            EvernoteUser user = Find(x => x.Username == data.Username || x.Email == data.Email);
+            BusinessLayerResult<EvernoteUser> res = new BusinessLayerResult<EvernoteUser>();
+
+            res.Result = data;
+
+            if (user != null)
+            {
+                if (user.Username == data.Username)
+                {
+                    res.AddError(ErrorMessagesCode.UsernameAlreadyExist, "Kullanıcı adı kayıtlıdır!!!");
+                }
+
+                if (user.Email == data.Email)
+                {
+                    res.AddError(ErrorMessagesCode.EmailAlreadyExist, "E-posta daha önceden kayıtlıdır!!!");
+                }
+            }
+            else
+            {
+                res.Result.ProfileImaFilename = "user.png";
+                res.Result.ActivateGuid = Guid.NewGuid();
+
+                if (base.Insert(res.Result) == 0)
+                {
+                    res.AddError(ErrorMessagesCode.UserCouldNotInserted, "Kullanıcı Eklenemedi!");
+                }
+
+            }
+            return res;
+        }
+
+
+        public new BusinessLayerResult<EvernoteUser> Update(EvernoteUser data)
+        {
+            EvernoteUser db_user = Find(x => x.Username == data.Username || x.Email == data.Email);
+            BusinessLayerResult<EvernoteUser> res = new BusinessLayerResult<EvernoteUser>();
+
+            res.Result = data;
+
+            if (db_user != null && db_user.Id != data.Id)
+            {
+                if (db_user.Username == data.Username)
+                {
+                    res.AddError(ErrorMessagesCode.UsernameAlreadyExist, "Kullanıcı Adı Kayıtlıdır.");
+                }
+                if (db_user.Email == data.Email)
+                {
+                    res.AddError(ErrorMessagesCode.EmailAlreadyExist, "E-posta Adresi kayıtlıdır");
+                }
+                return res;
+            }
+
+            res.Result = Find(x => x.Id == data.Id);
+            res.Result.Email = data.Email;
+            res.Result.Name = data.Name;
+            res.Result.Surname = data.Surname;
+            res.Result.Username = data.Username;
+            res.Result.Password = data.Password;
+            res.Result.IsActive = data.IsActive;
+            res.Result.IsAdmin = data.IsAdmin;
+
+
+            if (base.Update(res.Result) == 0)
+            {
+                res.AddError(ErrorMessagesCode.UserCouldNotUpdated, "Kullanıcı Güncellenemedi.");
+            }
+
+            return res;
+        }
+    }
 }

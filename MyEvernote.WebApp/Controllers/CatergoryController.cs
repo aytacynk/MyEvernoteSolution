@@ -112,7 +112,6 @@ namespace MyEvernote.WebApp.Controllers
 
             Catergory catergory = catManager.Find(x => x.Id == id.Value);
 
-
             if (catergory == null)
             {
                 return HttpNotFound();
@@ -128,7 +127,6 @@ namespace MyEvernote.WebApp.Controllers
         {
             Catergory catergory = catManager.Find(x => x.Id == id);
             catManager.Delete(catergory);
-
             
             return RedirectToAction("Index");
         }
