@@ -15,6 +15,7 @@ namespace MyEvernote.BusinessLayer.Abstract
 
         private Repository<T> repo = new Repository<T>();
 
+        // Tüm methodları 'virtual' yapmamızda ki sebep override ile ezmek ve 'new' kelimesi ile method gizlemesi yapmak. 
 
         public virtual int Delete(T obj)
         {

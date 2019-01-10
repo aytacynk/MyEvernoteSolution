@@ -10,6 +10,6 @@ namespace MyEvernote.BusinessLayer
 {
     public class LikedManager : ManagerBase<Liked>
     {
-
+         
     }
 }
