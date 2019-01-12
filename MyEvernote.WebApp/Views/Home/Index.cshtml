@@ -2,10 +2,8 @@
 @model List<Note>
 
 @{
-                /**/
-
-                ViewBag.Title = "Index";
-                //Layout = null;
+    ViewBag.Title = "Index";
+    //Layout = null;
 }
 
 <!-- Page Content -->
@@ -77,7 +75,7 @@
                             <div><hr /></div>
                             <div class="ratings">
                                 <p class="pull-right">
-                                    <button class="btn btn-default btn-sm">
+                                    <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#model_comment">
                                         <span class="glyphicon glyphicon-comment"></span> Yorumlar
                                     </button>
                                 </p>
@@ -98,4 +96,6 @@
 @section footer{
     @Html.Partial("_PartialFooter")
 }
+
+@Bootstrap.ModalPopUp(id: "modal_comment", title: "Yorumlar")
 
