@@ -23,10 +23,10 @@
                 @if (user != null && user.Id == item.Owner.Id)
                 {
                     <span class="col-md-2 text-right">
-                        <button type="button" class="btn btn-warning btn-xs" data-edit-mode="false" onclick="doComment(this,'edit_clicked',@item.Id,'comment_text_@item.Id');">
+                        <button type="button" class="btn btn-warning btn-xs" data-edit-mode="false" onclick="doComment(this,'edit_clicked',@item.Id,'#comment_text_@item.Id');">
                             <span class="glyphicon glyphicon-edit"></span>
                         </button>
-                        <button type="button" class="btn btn-danger btn-xs">
+                        <button type="button" class="btn btn-danger btn-xs" onclick="doComment(this,'delete_clicked',@item.Id);">
                             <span class="glyphicon glyphicon-trash"></span>
                         </button>
                     </span>

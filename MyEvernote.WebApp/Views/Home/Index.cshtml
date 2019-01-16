@@ -102,10 +102,13 @@
 <script>
     $(document).ready(function () {
 
+        var noteid = -1;
+        var modalCommentBodyId = "#modal_comment_body";
+
         $('#modal_comment').on('show.bs.modal', function (e) {
 
             var btn = $(e.relatedTarget);
-            var noteid = btn.data("note-id");
+            noteid = btn.data("note-id");
 
             $("#modal_comment_body").load("/Comment/ShowNoteComments/" + noteid);
             //İçine veri yüklemek istenilen elemente 'load' metoduyla yükleme gerçekleştirilir.
@@ -129,8 +132,9 @@
                 btnSpan.removeClass('glyphicon-edit');
                 btnSpan.addClass('glyphicon-ok');
 
-                $('#' + spanId).attr('contenteditable', true);
-
+                $(spanId).addClass('editable');
+                $(spanId).attr('contenteditable', true);
+                $(spanId).focus();
             } else {
 
                 button.data("edit-mode", false);
@@ -140,11 +144,61 @@
                 btnSpan.addClass('glyphicon-edit');
                 btnSpan.removeClass('glyphicon-ok');
 
-                $('#' + spanId).attr('contenteditable', false);
+                $(spanId).removeClass('editable');
+                $(spanId).attr('contenteditable', false);
+
+                var txt = $(spanId).text();
+                console.log(txt);
+                $.ajax({
+                    method: "POST",
+                    url: "/Comment/Edit/" + commentId,
+                    data: { text: txt }
+                }).done(function (data) {
+
+                    if (data.result == true) {
+
+                        // Yorumlar partial tekrar yüklenir.
+                        $(modalCommentBodyId).load("/Comment/ShowNoteComments/" + noteid);
+
+                    } else {
+                        alert("Yorum güncellenemedi.");
+                    }
+                }).fail(function () {
+                    alert("Sunucu ile bağlantı kurulamadı.");
+                });
 
             }
         }
-    }
 
+        else if (e == 'delete_clicked') {
+
+            var diaglog = confirm("Yorum silinmesini onaylıyor musunuz?");
+
+            if (diaglog.result == false) {
+                return false;
+            }
+
+            $.ajax({
+                method: "POST",
+                url: "/Comment/Delete/" + commentId
+            }).done(function (data) {
+
+                if (data.result) {
+                    console.log(noteid);
+                    $("#modal_comment_body").load("/Comment/ShowNoteComments/" + noteid);
+                    //İçine veri yüklemek istenilen elemente 'load' metoduyla yükleme gerçekleştirilir.
+
+                } else {
+                    alert("Yorum silinemedi.");
+                }
+
+            }).fail(function () {
+                alert("Sunucu ile bağlantı kurulamadı.");
+
+            });
+
+
+        }
+    }
 
 </script>
