@@ -3,6 +3,8 @@
 @model List<Comment>
 
 @{
+    /**/
+
     EvernoteUser user = CurrentSession.User;
 }
 
@@ -37,6 +39,28 @@
                     <span class="glyphicon glyphicon-user"></span> @item.Owner.Username
                 </small>
             </div>
+        </div>
+    </div>
+
+}
+
+@if (user != null)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="input-group">
+                <input type="text" id="new_comment_text" class="form-control" placeholder="Yorumunuz..."/>
+                <span class="input-group-btn">
+                    <button class="btn btn-success" type="button" onclick="doComment(this,'new_clicked',-1);">
+                        <span class="glyphicon glyphicon-send"></span> Gönder
+                    </button>
+                </span>
+            </div><!-- /input-group -->
         </div>
     </div>
 }
