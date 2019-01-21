@@ -48,18 +48,25 @@
             <div class="row">
                 @foreach (Note note in Model)
                 {
-                    <div class="col-sm-4 col-lg-4 col-md-4">
+                    <div class="col-sm-4 col-lg-4 col-md-4" data-note-id="@note.Id">
                         <div class="thumbnail">
                             <img src="http://placehold.it/320x150" alt="@note.Title">
                             <div class="caption">
                                 <h4>
-                                    <a href="#">@note.Title</a>
+                                    <a href="#" data-toggle="modal" data-target="#modal_notedetail" data-note-id="@note.Id">
+                                        @note.Title
+                                    </a>
                                 </h4>
-                                @if (string.IsNullOrEmpty(note.Text) == false && note.Text.Length > 55)
+                                <h6 class="text-right">
+                                    @note.Owner.Username <span class="glyphicon glyphicon-user"></span><br />
+                                    @note.ModifiedOn.ToString("dd.MM.yy HH:mm") <span class="glyphicon glyphicon-time"></span>
+                                </h6>
+
+                                @if (string.IsNullOrEmpty(note.Text) == false && note.Text.Length > 70)
                                 {
-                                    <p>@(note.Text.Substring(0, 55) + "...")</p>
-                                    <p>
-                                        <a href="#" class="btn btn-default btn-xs">devamı... <span class="glyphicon glyphicon-chevron-right"></span></a>
+                                    <p>@(note.Text.Substring(0, 70) + "...")</p>
+                                    <p class="pull-right">
+                                        <a href="#" data-toggle="modal" data-target="#modal_notedetail" data-note-id="@note.Id" class="btn btn-default btn-sm">devamı <span class="glyphicon glyphicon-chevron-right"></span></a>
                                     </p>
                                 }
                                 else
@@ -67,12 +74,10 @@
                                     <p>@note.Text</p>
                                 }
 
-                                <h6 class="text-right">
-                                    @note.Owner.Username <span class="glyphicon glyphicon-user"></span> <br />
-                                    <span class="glyphicon glyphicon-time"></span> @note.ModifiedOn.ToString("dd.MM.yyyy HH:mm")<br />
-                                </h6>
                             </div>
-                            <div><hr /></div>
+                            <div>
+                                <hr />
+                            </div>
                             <div class="ratings">
                                 <p class="pull-right">
                                     <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal_comment" data-note-id="@note.Id">
@@ -80,8 +85,9 @@
                                     </button>
                                 </p>
                                 <p>
-                                    <button class="btn btn-default btn-sm" type="button">
-                                        <span class="glyphicon glyphicon-star"></span> @note.LikeCount
+                                    <button class="btn btn-default btn-sm" type="button" data-liked="false" data-note-id="@note.Id">
+                                        <span class="glyphicon glyphicon-star-empty like-star"></span>&nbsp;
+                                        <span class="like-count">@note.LikeCount</span>
                                     </button>
                                 </p>
                             </div>
@@ -99,127 +105,6 @@
 
 @Bootstrap.ModalPopUp(id: "modal_comment", title: "Yorumlar")
 
-<script>
+<script src="~/Scripts/comment.js"></script>
 
-    var noteid = -1;
-    var modalCommentBodyId = "#modal_comment_body";
-
-    $(document).ready(function () {
-
-        $('#modal_comment').on('show.bs.modal', function (e) {
-
-            var btn = $(e.relatedTarget);
-            noteid = btn.data("note-id");
-
-            $("#modal_comment_body").load("/Comment/ShowNoteComments/" + noteid);
-            //İçine veri yüklemek istenilen elemente 'load' metoduyla yükleme gerçekleştirilir.
-        });
-
-    });
-
-    function doComment(btn, e, commentId, spanId) {
-
-        var button = $(btn);
-        var mode = button.data('edit-mode');
-
-        if (e == 'edit_clicked') {
-
-            if (!mode) {
-
-                button.data("edit-mode", true);
-                button.removeClass('btn-warning');
-                button.addClass('btn-success');
-                var btnSpan = button.find("span");
-                btnSpan.removeClass('glyphicon-edit');
-                btnSpan.addClass('glyphicon-ok');
-
-                $(spanId).addClass('editable');
-                $(spanId).attr('contenteditable', true);
-                $(spanId).focus();
-            } else {
-
-                button.data("edit-mode", false);
-                button.addClass('btn-warning');
-                button.removeClass('btn-success');
-                var btnSpan = button.find("span");
-                btnSpan.addClass('glyphicon-edit');
-                btnSpan.removeClass('glyphicon-ok');
-
-                $(spanId).removeClass('editable');
-                $(spanId).attr('contenteditable', false);
-
-                var txt = $(spanId).text();
-                console.log(txt);
-                $.ajax({
-                    method: "POST",
-                    url: "/Comment/Edit/" + commentId,
-                    data: { text: txt }
-                }).done(function (data) {
-
-                    if (data.result == true) {
-
-                        // Yorumlar partial tekrar yüklenir.
-                        $(modalCommentBodyId).load("/Comment/ShowNoteComments/" + noteid);
-
-                    } else {
-                        alert("Yorum güncellenemedi.");
-                    }
-                }).fail(function () {
-                    alert("Sunucu ile bağlantı kurulamadı.");
-                });
-
-            }
-        }
-
-        else if (e == 'delete_clicked') {
-
-            var diaglog = confirm("Yorum silinmesini onaylıyor musunuz?");
-
-            if (diaglog.result == false) {
-                return false;
-            }
-
-            $.ajax({
-                method: "POST",
-                url: "/Comment/Delete/" + commentId
-            }).done(function (data) {
-
-                if (data.result) {
-                    $("#modal_comment_body").load("/Comment/ShowNoteComments/" + noteid);
-                    //İçine veri yüklemek istenilen elemente 'load' metoduyla yükleme gerçekleştirilir.
-
-                } else {
-                    alert("Yorum silinemedi.");
-                }
-
-            }).fail(function () {
-                alert("Sunucu ile bağlantı kurulamadı.");
-
-            });
-        }
-
-        else if (e == "new_clicked") {
-
-            var txt = $("#new_comment_text").val();
-
-            $.ajax({
-                method: "POST",
-                url: "/Comment/Create",
-                data: { "text": txt, "noteid": noteid }
-            }).done(function (data) {
-
-                if (data.result) {
-                    $("#modal_comment_body").load("/Comment/ShowNoteComments/" + noteid);
-                    //İçine veri yüklemek istenilen elemente 'load' metoduyla yükleme gerçekleştirilir.
-
-                } else {
-                    alert("Yorum eklenemedi.");
-                }
-
-            }).fail(function () {
-                alert("Sunucu ile bağlantı kurulamadı.");
-            });
-        }
-    }
-
-</script>
+<script src="~/Scripts/like.js"></script>
