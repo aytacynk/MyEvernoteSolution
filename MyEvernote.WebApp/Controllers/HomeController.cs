@@ -3,6 +3,7 @@ using MyEvernote.BusinessLayer.Results;
 using MyEvernote.Entities;
 using MyEvernote.Entities.Messages;
 using MyEvernote.Entities.ValueObjects;
+using MyEvernote.WebApp.Filters;
 using MyEvernote.WebApp.Models;
 using MyEvernote.WebApp.ViewModels;
 using System;
@@ -14,6 +15,7 @@ using System.Web.Mvc;
 
 namespace MyEvernote.WebApp.Controllers
 {
+    [Exc]
     public class HomeController : Controller
     {
         private NoteManager noteManager = new NoteManager();
@@ -23,6 +25,11 @@ namespace MyEvernote.WebApp.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            //object o = 0;
+            //int a = 1;
+            //int c = a / (int)o;
+
+
             BusinessLayer.Test test = new BusinessLayer.Test();
             //test.InsertTest();
             //test.UpdateTest();
@@ -36,7 +43,7 @@ namespace MyEvernote.WebApp.Controllers
             //}
 
 
-            return View(noteManager.ListQueryable().OrderByDescending(x => x.ModifiedOn).ToList());
+            return View(noteManager.ListQueryable().Where(x => x.IsDraft == false).OrderByDescending(x => x.ModifiedOn).ToList());
 
             //return View(nm.GetAllNotesQueryable().OrderByDescending(x => x.ModifiedOn).ToList());
         }
@@ -57,7 +64,7 @@ namespace MyEvernote.WebApp.Controllers
                 return HttpNotFound();
             }
 
-            return View("Index", cat.Notes.OrderByDescending(x => x.ModifiedOn).ToList());
+            return View("Index", cat.Notes.Where(x => x.IsDraft == false).OrderByDescending(x => x.ModifiedOn).ToList()); // Bu sorguda tasklask durumundakiler görünmezler. Şartlı sorgu.
         }
 
 
@@ -72,7 +79,7 @@ namespace MyEvernote.WebApp.Controllers
             return View();
         }
 
-
+        [Auth]
         public ActionResult ShowProfile()
         {
             //EvernoteUser currentUser = Session["login"] as EvernoteUser;
@@ -95,7 +102,7 @@ namespace MyEvernote.WebApp.Controllers
             return View(res.Result);
         }
 
-
+        [Auth]
         public ActionResult EditProfile()
         {
             //EvernoteUser currentUser = Session["login"] as EvernoteUser;
@@ -119,7 +126,7 @@ namespace MyEvernote.WebApp.Controllers
 
         }
 
-
+        [Auth]
         [HttpPost]
         public ActionResult EditProfile(EvernoteUser user, HttpPostedFileBase ProfileImage)
         {
@@ -159,7 +166,7 @@ namespace MyEvernote.WebApp.Controllers
             return View(user);
         }
 
-
+        [Auth]
         public ActionResult DeleteProfile()
         {
             //EvernoteUser currentUser = Session["login"] as EvernoteUser;
@@ -327,6 +334,15 @@ namespace MyEvernote.WebApp.Controllers
             return RedirectToAction("Index");
 
         }
+        public ActionResult AccessDenied()
+        {
 
+            return View();
+        }
+        public ActionResult HasError()
+        {
+
+            return View();
+        }
     }
 }

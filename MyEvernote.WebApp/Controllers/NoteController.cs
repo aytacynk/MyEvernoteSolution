@@ -8,17 +8,19 @@ using System.Web;
 using System.Web.Mvc;
 using MyEvernote.BusinessLayer;
 using MyEvernote.Entities;
+using MyEvernote.WebApp.Filters;
 using MyEvernote.WebApp.Models;
 
 namespace MyEvernote.WebApp.Controllers
 {
+    [Exc]
     public class NoteController : Controller
     {
         private NoteManager noteManager = new NoteManager();
         private CategoryManager categoryManager = new CategoryManager();
         private LikedManager likedManager = new LikedManager();
 
-
+        [Auth]
         public ActionResult Index()
         {
             var notes = noteManager.ListQueryable().Include("Catergory").Include("Owner").Where(x => x.Owner.Id == CurrentSession.User.Id).OrderByDescending(x => x.ModifiedOn);
@@ -26,6 +28,7 @@ namespace MyEvernote.WebApp.Controllers
             return View(notes.ToList());
         }
 
+        [Auth]
         public ActionResult MyLikedNotes()
         {
             var notes = likedManager.ListQueryable().Include("LikedUser").Include("Note").Where(x => x.LikedUser.Id == CurrentSession.User.Id).Select(x => x.Note).Include("Catergory").Include("Owner").OrderByDescending(x => x.ModifiedOn);
@@ -33,6 +36,7 @@ namespace MyEvernote.WebApp.Controllers
             return View("Index", notes.ToList());
         }
 
+        [Auth]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -47,12 +51,14 @@ namespace MyEvernote.WebApp.Controllers
             return View(note);
         }
 
+        [Auth]
         public ActionResult Create()
         {
             ViewBag.CategoryId = new SelectList(CacheHelper.GetCategoriesFromCache(), "Id", "Title");
             return View();
         }
 
+        [Auth]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Note note)
@@ -72,6 +78,7 @@ namespace MyEvernote.WebApp.Controllers
             return View(note);
         }
 
+        [Auth]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -89,6 +96,7 @@ namespace MyEvernote.WebApp.Controllers
             return View(note);
         }
 
+        [Auth]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Note note)
@@ -113,6 +121,7 @@ namespace MyEvernote.WebApp.Controllers
             return View(note);
         }
 
+        [Auth]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -131,6 +140,7 @@ namespace MyEvernote.WebApp.Controllers
             return View(note);
         }
 
+        [Auth]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -202,6 +212,24 @@ namespace MyEvernote.WebApp.Controllers
             }
 
             return Json(new { hasError = true, errorMessage = "Beğenme işlemi gerçekleştirilemedi.", result = note.LikeCount });
+        }
+
+
+        public ActionResult GetNoteText(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Note note = noteManager.Find(x => x.Id == id);
+
+            if (note == null)
+            {
+                return HttpNotFound();
+            }
+
+            return PartialView("_PartialNoteText", note);
         }
     }
 }

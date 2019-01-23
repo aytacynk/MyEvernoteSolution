@@ -140,6 +140,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\like.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\NoteDetailPopup.js" />
     <Content Include="Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -152,6 +153,9 @@
     <Compile Include="Controllers\EvernoteUserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\NoteController.cs" />
+    <Compile Include="Filters\Auth.cs" />
+    <Compile Include="Filters\AuthAdmin.cs" />
+    <Compile Include="Filters\Exc.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -197,6 +201,9 @@
     <Content Include="Views\Note\Edit.cshtml" />
     <Content Include="Views\Note\Index.cshtml" />
     <Content Include="Views\Shared\_PartialComments.cshtml" />
+    <Content Include="Views\Shared\_PartialNoteText.cshtml" />
+    <Content Include="Views\Home\AccessDenied.cshtml" />
+    <Content Include="Views\Home\HasError.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -66,7 +66,10 @@
                                 {
                                     <p>@(note.Text.Substring(0, 70) + "...")</p>
                                     <p class="pull-right">
-                                        <a href="#" data-toggle="modal" data-target="#modal_notedetail" data-note-id="@note.Id" class="btn btn-default btn-sm">devamı <span class="glyphicon glyphicon-chevron-right"></span></a>
+                                        <a href="#" data-toggle="modal" data-target="#modal_notedetail" data-note-id="@note.Id" class="btn btn-default btn-sm">
+                                            devamı
+                                            <span class="glyphicon glyphicon-chevron-right"></span>
+                                        </a>
                                     </p>
                                 }
                                 else
@@ -104,7 +107,8 @@
 }
 
 @Bootstrap.ModalPopUp(id: "modal_comment", title: "Yorumlar")
+@Bootstrap.ModalPopUp(id: "modal_notedetail", title:"Note Detayı")
 
 <script src="~/Scripts/comment.js"></script>
-
 <script src="~/Scripts/like.js"></script>
+<script src="~/Scripts/NoteDetailPopup.js"></script>
